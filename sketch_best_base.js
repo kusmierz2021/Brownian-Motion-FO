@@ -5,15 +5,21 @@ let gravity = 0.0;
 let friction = -0.9;
 let molecules = [];
 let molecule_count_slider;
+let speed_slider;
+let checkbox;
+let brownianMotionPath = [];
 
 function setup() {
   createCanvas(720, 400);
   molecule_count_slider = createSlider(1, 1000, 2, 1);
   molecule_count_slider.position(20, 20);
   
-  temperature_slider = createSlider(1, 50, 2, 1);
-  temperature_slider.position(20, 50);
-
+  speed_slider = createSlider(1, 50, 2, 1);
+  speed_slider.position(20, 50);
+  
+  checkbox = createCheckbox('', false);
+  checkbox.position(20,80);
+  
   molecules[0] = new Molecule(
       random(width),
       random(height),
@@ -35,8 +41,25 @@ function draw() {
     molecule.move();
     molecule.display();
   });
+  fill(255,255,255);
   text('Molecule Count: ' + molecule_count_slider.value(), molecule_count_slider.x * 2 + molecule_count_slider.width, 35);
-  text('Temperature: ' + temperature_slider.value(), temperature_slider.x * 2 + temperature_slider.width, 65);
+  text('Speed: ' + speed_slider.value(), speed_slider.x * 2 + speed_slider.width, 65);
+  text('Show Brownian Motion Path', speed_slider.x * 2 + speed_slider.width, 95)
+  
+  if (checkbox.checked()) {
+    brownianMotionPath.push(molecules[0].position.copy());
+    stroke(255,255,255);
+      
+    for (let i = 1; i < brownianMotionPath.length; i++) {
+      line(brownianMotionPath[i-1].x,brownianMotionPath[i-1].y,brownianMotionPath[i].x,brownianMotionPath[i].y);
+          
+      }
+      
+    }
+    else {
+      brownianMotionPath = [];
+    }
+    noStroke();
 }
 
 
@@ -145,8 +168,8 @@ class Molecule {
 
   move() {
     this.vy += gravity;
-    this.position.x += this.velocity.x * temperature_slider.value();
-    this.position.y += this.velocity.y * temperature_slider.value();
+    this.position.x += this.velocity.x * speed_slider.value();
+    this.position.y += this.velocity.y * speed_slider.value();
     
     if (this.id != 0) {
       let distanceVect = p5.Vector.sub(molecules[0].position, this.position);
@@ -189,15 +212,38 @@ class Molecule {
   }
 
   display() {
+    
     if (this.id == 0) {
       fill(178, 190, 181,127);
-      ellipse(this.position.x, this.position.y, this.r * 2, this.r * 2);  
+      ellipse(this.position.x, this.position.y, this.r * 2, this.r * 2);
+
     }
     else {
-      fill(255,0,0);
+      let e = this.velocity.mag() * speed_slider.value();
+      
+      if (e < 4) {
+
+        fill(0,0,153);  
+      }
+      else if (4 <= e && e < 8) {
+
+        fill(0, 102, 255);  
+      }
+      if (8 <= e && e < 12) {
+
+        fill(255, 255, 204);  
+      }
+      else if (12 <= e && e < 16) {
+
+        fill(255, 153, 51);  
+      }
+      if (16 <= e) {
+
+        fill(255,0,0);  
+      }
       ellipse(this.position.x, this.position.y, this.r * 2, this.r * 2);  
     }
     
-    
+  
   }
 }
