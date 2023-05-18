@@ -23,8 +23,11 @@ function setup() {
   path_checkbox = document.getElementById("path-checkbox");
   path_checkbox_text = document.getElementById("path-checkbox-text");
 
+  kT_val = document.getElementById("kT-value");
+  
   acc_button = document.getElementById("acc-button");
-  acc_button.addEventListener("click", function () {
+  
+  acc_button.addEventListener("click", () => {
     console.log("Particle Accelerated!");
     molecules[0].velocity = molecules[0].velocity.mult(1.2);
   });
@@ -74,6 +77,9 @@ function draw() {
     brownianMotionPath = [];
   }
   noStroke();
+  
+  let kT = calculate_kT().toFixed(1);
+  kT_val.textContent = "kT = " + kT;
 }
 
 function check_molecules() {
@@ -224,4 +230,16 @@ class Molecule {
       ellipse(this.position.x, this.position.y, this.r * 2, this.r * 2);
     }
   }
+}
+
+function calculate_kT() {
+  let sum_of_energy = 0;
+  let energy = 0;
+  let v = 0;
+  molecules.forEach((molecule) => {
+    let v = molecule.velocity.mag() * parseInt(speed_slider.value);
+    energy = v * v * molecule.m / 2;
+    sum_of_energy += energy;
+  });
+  return sum_of_energy / molecules.length;
 }
