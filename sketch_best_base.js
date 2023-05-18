@@ -1,12 +1,12 @@
 
 let numBalls = 1000;
 let spring = 0.05;
-let gravity = 0.0;
 let friction = -0.9;
 let molecules = [];
 let molecule_count_slider;
 let speed_slider;
 let checkbox;
+let gravity_slider;
 let brownianMotionPath = [];
 
 function setup() {
@@ -17,8 +17,11 @@ function setup() {
   speed_slider = createSlider(1, 50, 2, 1);
   speed_slider.position(20, 50);
   
+  gravity_slider = createSlider(0, 10, 0, 1);
+  gravity_slider.position(20, 80);
+  
   checkbox = createCheckbox('', false);
-  checkbox.position(20,80);
+  checkbox.position(20,110);
   
   molecules[0] = new Molecule(
       random(width),
@@ -44,7 +47,8 @@ function draw() {
   fill(255,255,255);
   text('Molecule Count: ' + molecule_count_slider.value(), molecule_count_slider.x * 2 + molecule_count_slider.width, 35);
   text('Speed: ' + speed_slider.value(), speed_slider.x * 2 + speed_slider.width, 65);
-  text('Show Brownian Motion Path', speed_slider.x * 2 + speed_slider.width, 95)
+    text('Gravity: ' + gravity_slider.value(), gravity_slider.x * 2 + gravity_slider.width, 95);
+  text('Show Brownian Motion Path', speed_slider.x * 2 + speed_slider.width, 125)
   
   if (checkbox.checked()) {
     brownianMotionPath.push(molecules[0].position.copy());
@@ -167,7 +171,7 @@ class Molecule {
   }
 
   move() {
-    this.vy += gravity;
+    this.velocity.y += gravity_slider.value() / 100;
     this.position.x += this.velocity.x * speed_slider.value();
     this.position.y += this.velocity.y * speed_slider.value();
     
