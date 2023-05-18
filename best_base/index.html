@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <main>
+      
+      <div class="container">
+        <div class="slider">
+          <input id="slider-molecules" type="range" min="1" max="1000" value="5">
+          <span id="slider-molecules-value" class="slider-value"></span>
+        </div>
+        <div class="slider">
+          <input id="slider-speed" type="range" min="1" max="15" value="2">
+          <span id="slider-speed-value" class="slider-value"></span>
+        </div>
+        <div class="slider">
+          <input id="slider-gravity" type="range" min="0" max="10" value="0">
+          <span id="slider-gravity-value" class="slider-value"></span>
+        </div>
+        <div class="slider">
+          <input type="checkbox" id="path-checkbox">
+          <span class="slider-value">Show Brownian Motion path</span>
+        </div>
+      </div>
+      
+    </main>
+    <script src="sketch.js"></script>
+  </body>
+</html>
