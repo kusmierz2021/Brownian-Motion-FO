@@ -1,0 +1,52 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.slider input {
+  display: block;
+  margin-bottom: 10px;
+}
+.slider span {
+  display: block;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.slider button {
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fffff;
+  color: #00000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.slider button:hover {
+  
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+aside {
+  margin-top: 10px;
+}
