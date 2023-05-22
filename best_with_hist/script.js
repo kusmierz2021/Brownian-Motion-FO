@@ -5,40 +5,11 @@ let class_columns = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0,
 ];
-const columns = [
-  { x: 0, width: 10, height: 50, color: "red" },
-  { x: 10, width: 10, height: 5, color: "#8BC34A" },
-  { x: 20, width: 10, height: 50, color: "blue" },
-  { x: 30, width: 10, height: 50, color: "red" },
-  { x: 40, width: 10, height: 50, color: "green" },
-  { x: 50, width: 10, height: 50, color: "blue" },
-  { x: 60, width: 10, height: 50, color: "red" },
-  { x: 70, width: 10, height: 50, color: "green" },
-  { x: 80, width: 10, height: 50, color: "#FFEB3B" },
-  { x: 90, width: 10, height: 50, color: "#F67C15" },
-  { x: 100, width: 10, height: 50, color: "#F67C15" },
-  { x: 110, width: 10, height: 50, color: "#F67C15" },
-  { x: 120, width: 10, height: 50, color: "#3FFF3B" },
-  { x: 130, width: 10, height: 50, color: "#3FFF3B" },
-  { x: 140, width: 10, height: 50, color: "#3FFF3B" },
-  { x: 150, width: 10, height: 50, color: "#3FFF3B" },
-  { x: 160, width: 10, height: 50, color: "#E4F717" },
-  { x: 170, width: 10, height: 50, color: "#E4F717" },
-  { x: 180, width: 10, height: 50, color: "#E4F717" },
-  { x: 190, width: 10, height: 50, color: "#E4F717" },
-  { x: 200, width: 10, height: 50, color: "#D23BFF" },
-  { x: 210, width: 10, height: 50, color: "#D23BFF" },
-  { x: 220, width: 10, height: 50, color: "#D23BFF" },
-  { x: 230, width: 10, height: 50, color: "#D23BFF" },
-  { x: 240, width: 10, height: 50, color: "#EF719C" },
-  { x: 250, width: 10, height: 50, color: "#EF719C" },
-  { x: 260, width: 10, height: 50, color: "#EF719C" },
-  { x: 270, width: 10, height: 50, color: "#EF719C" },
-  { x: 280, width: 10, height: 50, color: "#FF3B3B" },
-  { x: 290, width: 10, height: 50, color: "#FF3B3B" },
-  { x: 300, width: 10, height: 50, color: "#FF3B3B" },
-  { x: 310, width: 10, height: 50, color: "#FF3B3B" },
-];
+let columns = [];
+
+for (let i = 0; i < class_columns.length; i++) {
+  columns[i] = { x: i*10, width: 10, height: 50, color: '#' +Math.floor(Math.random()*16777215).toString(16) };
+}
 const M = 2.989 * Math.pow(10, -26);
 const J2eV = 6.24150907 * Math.pow(10, 21);
 const B = 7 * Math.pow(10, -29);
@@ -53,7 +24,7 @@ function setup() {
   context = canvas.getContext("2d");
 
   // Drawing instructions
-  context.fillStyle = "rgb(85,79,79)";
+  context.fillStyle = "rgb(0,0,0)";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
   molecule_count_slider = document.getElementById("slider-molecules");
@@ -91,7 +62,7 @@ function setup() {
   );
 
   V =
-    (min(1000, windowWidth) / 20) * (min(1000, windowWidth) / 20) * 1 * Vh2O; // V in cubic m for whole canvas
+    (min(1000, windowWidth) / 8) * (min(1000, windowWidth) / 8) * 1 * Vh2O; // V in cubic m for whole canvas
 
   check_molecules();
   noStroke();
@@ -131,6 +102,9 @@ function draw() {
     brownianMotionPath = [];
   }
   noStroke();
+  fill('#white')
+  text('Molecule Count: ', 30, min(1000, windowWidth)+400);
+  
 
   // Writing Maxwell's histogram
   classify_molecules();
@@ -177,22 +151,16 @@ class Molecule {
     this.r = r;
     this.id = idin;
     this.others = oin;
-    this.m = ((r * r) / 16) * M; //2.989×10−26
+    this.m = (r / 4 ) * M; //2.989×10−26
   }
 
   collide() {
     for (let i = this.id + 1; i < molecules.length; i++) {
-      // console.log(others[i]);
       let distanceVect = p5.Vector.sub(molecules[i].position, this.position);
       let distanceVectMag = distanceVect.mag();
       let minDistance = this.others[i].r + this.r;
-      //   console.log(distance);
-      //console.log(minDist);
       if (distanceVectMag < minDistance) {
-        //console.log("2");
-        // get angle of distanceVect
         let theta = distanceVect.heading();
-        // precalculate trig values
         let sine = sin(theta);
         let cosine = cos(theta);
         let bTemp = [new p5.Vector(), new p5.Vector()];
@@ -377,7 +345,7 @@ function classify_molecules() {
 
 function draw_columns() {
   let i = 0;
-  context.fillStyle = "rgb(161,157,157)";
+  context.fillStyle = "rgb(0,0,0)";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
   for (const column of columns) {
@@ -405,7 +373,10 @@ function calculate_kT() {
 }
 
 function calculate_P(n, kT) {
-  return (n * kT) / V - n * B;
+  console.log("n * kT = ", (n * kT))
+  console.log("V - Nb: ", V - n * B)
+  console.log("P = ", (n * kT) / V )
+  return ((n * kT) / V );
 }
 
 function calculate_PVNKT(P, n, kT) {
@@ -413,5 +384,6 @@ function calculate_PVNKT(P, n, kT) {
 }
 
 function calculate_PVPNB(P, n, kT) {
-  return (P * (V - n * B)) / (n * kT);
+  // console.log("P(V - Nb): ",  P * (V - n * B))
+  return P * (V - n * B) / (n * kT);
 }
