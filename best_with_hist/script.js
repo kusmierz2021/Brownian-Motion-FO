@@ -42,6 +42,7 @@ const columns = [
 const M = 2.989 * Math.pow(10, -26);
 const J2eV = 6.24150907 * Math.pow(10, 21);
 const B = 7 * Math.pow(10, -29);
+let V = 0;
 const Vh2O = 2.99 * Math.pow(10, -32); // in cubic m
 let P = 0; // uklad's pressure value
 
@@ -89,7 +90,7 @@ function setup() {
     (acceleration = 7)
   );
 
-  const V =
+  V =
     (min(1000, windowWidth) / 20) * (min(1000, windowWidth) / 20) * 1 * Vh2O; // V in cubic m for whole canvas
 
   check_molecules();
