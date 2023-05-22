@@ -41,6 +41,9 @@ const columns = [
 ];
 const M = 2.989 * Math.pow(10, -26);
 const J2eV = 6.24150907 * Math.pow(10, 21);
+const B = 7 * Math.pow(10, -29);
+const Vh2O = 2.99 * Math.pow(10, -32); // in cubic m
+let P = 0; // uklad's pressure value
 
 function setup() {
   createCanvas(min(1000, windowWidth), min(1000, windowWidth));
@@ -66,6 +69,9 @@ function setup() {
   stop_checkbox = document.getElementById("stop-checkbox");
 
   kT_val = document.getElementById("kT-value");
+  pvnkt_val = document.getElementById("pvnkt-value");
+  pvpnb_val = document.getElementById("pv-pnb-value");
+  nb_val = document.getElementById("nb-value");
 
   acc_button = document.getElementById("acc-button");
 
@@ -83,20 +89,13 @@ function setup() {
     (acceleration = 7)
   );
 
+  const V =
+    (min(1000, windowWidth) / 20) * (min(1000, windowWidth) / 20) * 1 * Vh2O; // V in cubic m for whole canvas
+
   check_molecules();
   noStroke();
   fill(255, 204);
 }
-
-// function setup() {
-//   canvas2 = createCanvas(400, 400);
-//   background(220);
-// }
-// function draw() {
-//   // Draw your content for canvas 2 here
-//   fill(0, 0, 255);
-//   rect(width / 2, height / 2, 100, 100);
-// }
 
 function draw() {
   background(0);
@@ -132,11 +131,20 @@ function draw() {
   }
   noStroke();
 
+  // Writing Maxwell's histogram
   classify_molecules();
   draw_columns();
 
+  // Calculating perfect gas parameters
+  let n = parseInt(molecule_count_slider.value);
   let kT = calculate_kT();
-  kT_val.textContent = "kT = " + kT.toFixed(3) + " meV";
+  let kT_eval = kT * J2eV; // kT value shown in meV
+  kT_val.textContent = "kT = " + kT_eval.toFixed(3) + " meV";
+  P = calculate_P(n, kT);
+  pvnkt_val.textContent = "PV/NkT = " + calculate_PVNKT(P, n, kT).toFixed(3);
+  pvpnb_val.textContent =
+    "P(V-Nb)/NkT = " + calculate_PVPNB(P, n, kT).toFixed(3);
+  nb_val.textContent = "Nb = " + parseInt(molecule_count_slider.value) * B;
 }
 
 function check_molecules() {
@@ -370,6 +378,7 @@ function draw_columns() {
   let i = 0;
   context.fillStyle = "rgb(161,157,157)";
   context.fillRect(0, 0, canvas.width, canvas.height);
+
   for (const column of columns) {
     context.fillStyle = column.color;
     context.fillRect(
@@ -380,12 +389,6 @@ function draw_columns() {
     );
     i += 1;
   }
-  //   class_columns.forEach((column) => {
-
-  //     context.fillStyle = column.color;
-  //     context.fillRect(column.x, canvas.height, column.width, -10 * column);
-  //   });
-  // return 0;
 }
 
 function calculate_kT() {
@@ -397,5 +400,17 @@ function calculate_kT() {
     energy = (v * v * molecule.m) / 2;
     sum_of_energy += energy;
   });
-  return sum_of_energy * J2eV;
+  return sum_of_energy;
+}
+
+function calculate_P(n, kT) {
+  return (n * kT) / V - n * B;
+}
+
+function calculate_PVNKT(P, n, kT) {
+  return (P * V) / (n * kT);
+}
+
+function calculate_PVPNB(P, n, kT) {
+  return (P * (V - n * B)) / (n * kT);
 }
