@@ -18,7 +18,7 @@ const Vh2O = 2.99 * Math.pow(10, -32); // in cubic m
 let P = 0; // uklad's pressure value
 
 function setup() {
-  createCanvas(min(1000, windowWidth), min(1000, windowWidth));
+  createCanvas(windowWidth, min(1000, windowWidth));
 
   canvas = document.getElementById("myCanvas");
   context = canvas.getContext("2d");
@@ -373,9 +373,9 @@ function calculate_kT() {
 }
 
 function calculate_P(n, kT) {
-  console.log("n * kT = ", (n * kT))
-  console.log("V - Nb: ", V - n * B)
-  console.log("P = ", (n * kT) / V )
+  // console.log("n * kT = ", (n * kT))
+  // console.log("V - Nb: ", V - n * B)
+  // console.log("P = ", (n * kT) / V )
   return ((n * kT) / V );
 }
 
